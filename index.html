@@ -53,20 +53,15 @@
 
 <body>
     <div id="app">
-        <button v-on:click="updateMot()">chargement du titre </button>
+        <button v-on:click="title_get()">chargement du titre </button>
 
-
-        <transition>
-        <div class="title_container" v-for="Title in listTitle">
-            <div class="bouton_hide" :id="index" v-for="(mot,index) in Title">{{mot}} 
-                <div v-on:click="supprimer(index)" class="supprimer">
+        <div class="title_container" :id="index" v-for="word in title">
+            <div class="bouton_hide">{{ word}}
+                <div v-on:click="word_delete(index)" class="supprimer">
                     X
                 </div>
             </div>
-        </transition>
-             
-    </div>
-
+        </div>
 
     <script>
 
@@ -74,37 +69,22 @@
         var app = new Vue({
             el: '#app',
             data:{
-                posts: [],
-                listTitle:[],
+                title:[],
             },
             created(){
-                this.updatePost()
+                this.title_get()
             },
             methods:{
-                updatePost(){
-                    axios.get('https://jsonplaceholder.typicode.com/todos').then(reponse => this.posts = reponse.data); //appel de mon API et Json
+                title_get(){
+                    axios.get('https://jsonplaceholder.typicode.com/todos').then(reponse => this.title = reponse.data[0]['title'].split(' '));
                 },
 
-                    //suppression des mots au clic
-                supprimer(number){
-                    console.log(number)
-                    var e = document.getElementById(number)
-                    e.style.display = "none"
-                },
-
-                    //fonction de séparation des mots dans le titre
-                updateMot(){                    
-                    this.posts.forEach(post => {
-                        
-                        mot = post.title.split(' ')
-                        this.listTitle.push(mot)
-                        
-                    });
-
+                word_delete(index){
+                    this.title.splice(index, 1);
                 },
             }
         });
     </script>
-    
+
 </body>
 </html>
