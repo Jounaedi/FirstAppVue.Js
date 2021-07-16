@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppVueJs</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<style>
+
+
+.title_container{
+    display:flex;
+    position: center;
+}
+
+.mot_container{
+    display: flex;
+}
+
+.bouton_hide{
+    display: flex;
+    border: 1px solid black;
+    background-color: white;
+    transition: opacity .0s;
+    margin: 15px;
+    border-radius: 5px;    
+}
+
+.supprimer{
+    color: red;
+    display: flex;
+    background-color: white;
+    border: white;
+    cursor: pointer;
+    transition: opacity .0s;
+    margin: 1px;
+}
+
+
+
+</style>
+
+
+
+
+<body>
+    <div id="app">
+        <button v-on:click="updateMot()">chargement du titre </button>
+
+
+        <transition>
+        <div class="title_container" v-for="Title in listTitle">
+            <div class="bouton_hide" :id="index" v-for="(mot,index) in Title">{{mot}} 
+                <div v-on:click="supprimer(index)" class="supprimer">
+                    X
+                </div>
+            </div>
+        </transition>
+             
+    </div>
+
+
+    <script>
+
+
+        var app = new Vue({
+            el: '#app',
+            data:{
+                posts: [],
+                listTitle:[],
+            },
+            created(){
+                this.updatePost()
+            },
+            methods:{
+                updatePost(){
+                    axios.get('https://jsonplaceholder.typicode.com/todos').then(reponse => this.posts = reponse.data); //appel de mon API et Json
+                },
+
+                    //suppression des mots au clic
+                supprimer(number){
+                    console.log(number)
+                    var e = document.getElementById(number)
+                    e.style.display = "none"
+                },
+
+                    //fonction de séparation des mots dans le titre
+                updateMot(){                    
+                    this.posts.forEach(post => {
+                        
+                        mot = post.title.split(' ')
+                        this.listTitle.push(mot)
+                        
+                    });
+
+                },
+            }
+        });
+    </script>
+    
+</body>
+</html>
